@@ -22,14 +22,40 @@
               <input id="txtHostname" type="text" class="form-control col-md-8" placeholder="hostname">
             </td>
             <td>
-              <input id="txtPort" type="text" class="form-control col-md-8" placeholder="port">
+              <input id="txtPort" type="text" class="form-control col-md-8" placeholder="port (eg 8182)">
             </td>
             <td>
               <a id="btnConnect"class="btn btn-raised btn-default">Connect</a>
             </td>
+            <td style="width:10%">
+            </td>
+            <td>
+	        <a id="btnLoadServer" class="btn btn-raised btn-warning">Load Server Graph</a>
+            </td>
+            <td>
+	        <a id="btnClearGraph" class="btn btn-raised btn-warning">Clear Graph</a>
+            </td>
+            <td>
+	        <a id="btnStartForceLayout" class="btn btn-raised btn-success">Start Force Layout</a>
+            </td>
+            <td>
+	        <a id="btnStopForceLayout" class="btn btn-raised btn-primary">Stop Force Layout</a>
+            </td>
+          </tr>
+        </table>
+        <hr>
+        <table>
+          <tr>
+            <td>
+              <input id="gremlinLimit" type="text" class="form-control col-md-8" placeholder="limit (eg 1000)">
+            </td>
+		 <td style="width:80%">           
+   <input id="gremlinQuery" style="width:100%" type="text" class="form-control col-md-16" placeholder="query (eg g.V())">
+            </td>
           </tr>
         </table>
         
+<!--
         <hr>
         <a id="btnLoadServer" class="btn btn-raised btn-warning">Load Server Graph</a>
         <a id="btnLoad" class="btn btn-raised btn-warning">Generate Random Graph</a>
@@ -38,6 +64,7 @@
         <a id="btnStopForceLayout" class="btn btn-raised btn-primary">Stop Force Layout</a>
         <a id="btnNeighbors" class="btn btn-raised btn-default">Neighbors</a>
         <a id="btnPageRank" class="btn btn-raised btn-default">Page Rank</a>
+-->
         <hr>
 
         <!-- The graph container -->

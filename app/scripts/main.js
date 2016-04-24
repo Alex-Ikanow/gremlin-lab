@@ -39,43 +39,65 @@ $(document).ready(function() {
     $("#btnLoadServer").click(function() {
         loadServerGraph(self);
     });
+    /* Connect to server */
+    $("#btnClearGraph").click(function() {
+        clearGraph(self);
+    });
 
     /* Initializing listeners */
     initializeSigmaListeners(self.s);
 });
 
+function clearGraph(obj){
+	obj.s.graph.clear();
+            obj.s.refresh();             
+
+}
+
 function loadServerGraph(obj){
 
-    var script = 'g.V()';
+    var gremlin_query = $("#gremlinQuery").val();
+    var gremlin_limit = $("#gremlinLimit").val();
+    if ((gremlin_query || '').length == 0) gremlin_query = 'g.V()';
+    if ((gremlin_limit || '').length == 0) gremlin_limit = '1000'; 
+    script = gremlin_query;
+    script += '.limit(' + gremlin_limit + ')'; 
 
     var query = obj.client.stream(script);
 
     query.on('data', function(d) {
 
         /* Adding to graph viz */
-        obj.s.graph.addNode({
-            id: d.id,
-            label: d.label,
-            x: Math.random(),
-            y: Math.random(),
-            size: Math.random(),
-            color: '#' + (Math.floor(Math.random() * 16777215).toString(16) + '000000').substr(0, 6),
-        });
+	try {
+		obj.s.graph.addNode({
+		    id: d.id,
+		    label: d.label,
+		    x: Math.random(),
+		    y: Math.random(),
+		    size: Math.random(),
+		    color: '#' + (Math.floor(Math.random() * 16777215).toString(16) + '000000').substr(0, 6),
+		});
 
-        /* display incoming node */
-        console.log(d);
+		/* display incoming node */
+		//console.log(d);
+	}
+	catch (e) {}
     });
 
     query.on('end', function(d) {
         /* refresh all vertices */
         obj.s.refresh();
-        /* logging the action */
-        console.log('All results fetched, goint to the nodes now');
         /* Going for the edges */
-        var edgeScript = 'g.E()';
+        //var edgeScript = 'g.E()';
+        var edgeScript = script + ".bothE()";
+
+        /* logging the action */
+        console.log('All results fetched, goint to the nodes now ' + edgeScript);
+
         var edgeQuery = obj.client.stream(edgeScript);
 
         edgeQuery.on('data', function(e) {
+	try {
 
             /* Adding to graph viz */
             obj.s.graph.addEdge({
@@ -88,7 +110,9 @@ function loadServerGraph(obj){
             });
 
             /* display incoming edge */
-            console.log(e);
+            //console.log(e);
+	}
+	catch (e) {}
         });
 
         edgeQuery.on('end', function() {
@@ -108,7 +132,13 @@ function connectToServer(obj) {
 
     /* Get the values */
     var hostname = $("#txtHostname").val();
+    if (0 == (hostname || '').length)
+	hostname = 'localhost';
+
     var port = parseInt($("#txtPort").val());
+    if (!port)
+	port = 8182;
+
     /* Try to connect */
     obj.client = gremlin.createClient(port, hostname);
     
